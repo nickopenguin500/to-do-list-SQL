@@ -1,0 +1,1 @@
+1. I am building a CLI To-Do list app in Python using sqlite3. Can you write a function to create a database with a table that tracks id, task, status, and due_date? After that, write a second function that takes user input from the terminal to insert a new task into that table.
