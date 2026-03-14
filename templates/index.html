@@ -8,7 +8,12 @@
         th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
         th { background-color: #f4f4f4; }
         .form-group { margin-bottom: 20px; }
-        .controls { margin-bottom: 20px; padding: 15px; background-color: #f9f9f9; border: 1px solid #ddd; display: flex; gap: 20px; }
+        .controls { margin-bottom: 20px; padding: 15px; background-color: #f9f9f9; border: 1px solid #ddd; display: flex; gap: 20px; align-items: center; flex-wrap: wrap; }
+        td input[type="text"], td input[type="date"], td select { 
+            padding: 5px; 
+            width: 100%; 
+            box-sizing: border-box; 
+        }
     </style>
 </head>
 <body>
@@ -16,36 +21,63 @@
     
     <div class="form-group">
         <form action="{{ url_for('add_task') }}" method="POST">
-            <input type="text" name="task_name" placeholder="Enter a new task..." required>
-            <label>Due:</label>
-            <input type="date" name="due_date" required>
-            <button type="submit">Add Task</button>
+            <input type="text" name="task_name" placeholder="Enter a new task..." required style="padding: 5px; width: 300px;">
+            
+            <label style="margin-left: 10px;">Priority:</label>
+            <select name="priority" style="padding: 5px;">
+                <option value="High">High</option>
+                <option value="Medium" selected>Medium</option>
+                <option value="Low">Low</option>
+            </select>
+
+            <label style="margin-left: 10px;">Due:</label>
+            <input type="date" name="due_date" required style="padding: 5px;">
+            
+            <button type="submit" style="padding: 6px; margin-left: 10px;">Add Task</button>
         </form>
     </div>
 
     <div class="controls">
-        <form action="{{ url_for('index') }}" method="GET" id="controlForm">
-            <label for="filter"><strong>Filter:</strong></label>
-            <select name="filter" id="filter" onchange="document.getElementById('controlForm').submit()">
-                <option value="All" {% if current_filter == 'All' %}selected{% endif %}>Show All Tasks</option>
-                <option value="Pending" {% if current_filter == 'Pending' %}selected{% endif %}>Pending Only</option>
-                <option value="Completed" {% if current_filter == 'Completed' %}selected{% endif %}>Completed Only</option>
-            </select>
+        <form action="{{ url_for('index') }}" method="GET" id="controlForm" style="display: flex; gap: 20px; width: 100%;">
+            
+            <div>
+                <label for="filter_status"><strong>Status:</strong></label>
+                <select name="filter_status" id="filter_status" onchange="document.getElementById('controlForm').submit()">
+                    <option value="All" {% if current_status == 'All' %}selected{% endif %}>All Statuses</option>
+                    <option value="Pending" {% if current_status == 'Pending' %}selected{% endif %}>Pending Only</option>
+                    <option value="Completed" {% if current_status == 'Completed' %}selected{% endif %}>Completed Only</option>
+                </select>
+            </div>
 
-            <label for="sort" style="margin-left: 20px;"><strong>Sort By:</strong></label>
-            <select name="sort" id="sort" onchange="document.getElementById('controlForm').submit()">
-                <option value="due_asc" {% if current_sort == 'due_asc' %}selected{% endif %}>Due Date (Earliest - Latest)</option>
-                <option value="due_desc" {% if current_sort == 'due_desc' %}selected{% endif %}>Due Date (Latest - Earliest)</option>
-                <option value="alpha" {% if current_sort == 'alpha' %}selected{% endif %}>Alphabetical (A - Z)</option>
-                <option value="comp_asc" {% if current_sort == 'comp_asc' %}selected{% endif %}>Date Completed (Earliest - Latest)</option>
-                <option value="comp_desc" {% if current_sort == 'comp_desc' %}selected{% endif %}>Date Completed (Latest - Earliest)</option>
-            </select>
+            <div>
+                <label for="filter_priority"><strong>Priority:</strong></label>
+                <select name="filter_priority" id="filter_priority" onchange="document.getElementById('controlForm').submit()">
+                    <option value="All" {% if current_priority == 'All' %}selected{% endif %}>All Priorities</option>
+                    <option value="High" {% if current_priority == 'High' %}selected{% endif %}>High Only</option>
+                    <option value="Medium" {% if current_priority == 'Medium' %}selected{% endif %}>Medium Only</option>
+                    <option value="Low" {% if current_priority == 'Low' %}selected{% endif %}>Low Only</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="sort"><strong>Sort By:</strong></label>
+                <select name="sort" id="sort" onchange="document.getElementById('controlForm').submit()">
+                    <option value="due_asc" {% if current_sort == 'due_asc' %}selected{% endif %}>Due Date (Earliest - Latest)</option>
+                    <option value="due_desc" {% if current_sort == 'due_desc' %}selected{% endif %}>Due Date (Latest - Earliest)</option>
+                    <option value="pri_high_low" {% if current_sort == 'pri_high_low' %}selected{% endif %}>Priority (High - Low)</option>
+                    <option value="pri_low_high" {% if current_sort == 'pri_low_high' %}selected{% endif %}>Priority (Low - High)</option>
+                    <option value="alpha" {% if current_sort == 'alpha' %}selected{% endif %}>Alphabetical (A - Z)</option>
+                    <option value="comp_asc" {% if current_sort == 'comp_asc' %}selected{% endif %}>Date Completed (Earliest - Latest)</option>
+                    <option value="comp_desc" {% if current_sort == 'comp_desc' %}selected{% endif %}>Date Completed (Latest - Earliest)</option>
+                </select>
+            </div>
         </form>
     </div>
 
     <table>
         <tr>
             <th>Task</th>
+            <th>Priority</th>
             <th>Status</th>
             <th>Due Date</th>
             <th>Date Completed</th>
@@ -53,27 +85,42 @@
         </tr>
         {% for task in tasks %}
         <tr>
-            <td>{{ task['task'] }}</td>
-            <td>{{ task['status'] }}</td>
-            <td>{{ task['due_date'] }}</td>
-            <td>{{ task['date_completed'] if task['date_completed'] else '-' }}</td>
             <td>
-                <form action="{{ url_for('update_task', id=task['id']) }}" method="POST" style="display:inline;">
-                    <select name="status">
-                        <option value="Pending" {% if task['status'] == 'Pending' %}selected{% endif %}>Pending</option>
-                        <option value="Completed" {% if task['status'] == 'Completed' %}selected{% endif %}>Completed</option>
-                    </select>
-                    <button type="submit">Update</button>
-                </form>
+                <input type="text" name="task_name" value="{{ task['task'] }}" form="update-form-{{ task['id'] }}" required>
+            </td>
+            
+            <td>
+                <select name="priority" form="update-form-{{ task['id'] }}">
+                    <option value="High" {% if task['priority'] == 'High' %}selected{% endif %}>High</option>
+                    <option value="Medium" {% if task['priority'] == 'Medium' %}selected{% endif %}>Medium</option>
+                    <option value="Low" {% if task['priority'] == 'Low' %}selected{% endif %}>Low</option>
+                </select>
+            </td>
 
-                <form action="{{ url_for('delete_task', id=task['id']) }}" method="POST" style="display:inline;">
+            <td>
+                <select name="status" form="update-form-{{ task['id'] }}">
+                    <option value="Pending" {% if task['status'] == 'Pending' %}selected{% endif %}>Pending</option>
+                    <option value="Completed" {% if task['status'] == 'Completed' %}selected{% endif %}>Completed</option>
+                </select>
+            </td>
+            
+            <td>
+                <input type="date" name="due_date" value="{{ task['due_date'] }}" form="update-form-{{ task['id'] }}" required>
+            </td>
+            
+            <td>{{ task['date_completed'] if task['date_completed'] else '-' }}</td>
+            
+            <td>
+                <form id="update-form-{{ task['id'] }}" action="{{ url_for('update_task', id=task['id']) }}" method="POST" style="display:none;"></form>
+                <button type="submit" form="update-form-{{ task['id'] }}">Update</button>
+                <form action="{{ url_for('delete_task', id=task['id']) }}" method="POST" style="display:inline; margin-left: 5px;">
                     <button type="submit" onclick="return confirm('Are you sure you want to delete this task?');">Delete</button>
                 </form>
             </td>
         </tr>
         {% else %}
         <tr>
-            <td colspan="5">No tasks found. Get to work!</td>
+            <td colspan="6">No tasks found. Get to work!</td>
         </tr>
         {% endfor %}
     </table>

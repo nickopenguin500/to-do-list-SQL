@@ -1,10 +1,18 @@
-1. I am building a CLI To-Do list app in Python using sqlite3. Can you write a function to create a database with a table that tracks id, task, status, and due_date? After that, write a second function that takes user input from the terminal to insert a new task into that table.
-2. ok still on step 4, tell me what to run
-3. [error message]
-4. how do i check that everything was added properly
-5. yes it printed correctly, lets move onto next step
+Model: Gemini Pro/thinking
+
+1. I am building a CLI To-Do list app in Python using sqlite3. Can you write a function to create a database with a table that tracks id, task, status, and due_date?
+2. now write a function that takes user input from the terminal to insert a new task into that table. Use parameterized queries to avoid SQL injection. explain how to test this
+3. i got this error [error message]
+4. can you add a way to "read" (retrieve and display records)
+5. yes it printed correctly, now can you add a way to update the status of the assignment? like between pending and completed. also add a way to delete
 6. lets completely redo this, right now, its possible to update things that dont exist and give dates that dont exist. Also, I would like to have this shown through a simple web interface instead. 
 7. yes, although i see my old todo.db data
-8. i dont think this meets all the requirements yet, dont I need some special filter for read
+8. now, can you add a filter for read such that you can sort by the due date, earliest to latest and vice versa
 9. yes, now do I need to turn on github pages for this? also, can you add more filters like alphabetical, date by earliest-latest and latest-earliest? also, add a column for date completed, add a filter for that in both ways too
-10. 
+10. can you add more update things? like updating the date, updating the name
+11. i dont have a update_task function
+12. it says i dont have user rights to view the page
+13. wait that link was working before tho, whyd it suddenly break
+14. the website looks wrong now, some of the text boxes are huge and the spacing of some lines look wrong
+15. can you add another column for priority? maybe just high, medium, low. also add filters for those. Filter to only see high, only see medium, only see low
+16. i got this error when i tried to filter by priority [error]
