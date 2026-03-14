@@ -1,1 +1,10 @@
 1. I am building a CLI To-Do list app in Python using sqlite3. Can you write a function to create a database with a table that tracks id, task, status, and due_date? After that, write a second function that takes user input from the terminal to insert a new task into that table.
+2. ok still on step 4, tell me what to run
+3. [error message]
+4. how do i check that everything was added properly
+5. yes it printed correctly, lets move onto next step
+6. lets completely redo this, right now, its possible to update things that dont exist and give dates that dont exist. Also, I would like to have this shown through a simple web interface instead. 
+7. yes, although i see my old todo.db data
+8. i dont think this meets all the requirements yet, dont I need some special filter for read
+9. yes, now do I need to turn on github pages for this? also, can you add more filters like alphabetical, date by earliest-latest and latest-earliest? also, add a column for date completed, add a filter for that in both ways too
+10. 
